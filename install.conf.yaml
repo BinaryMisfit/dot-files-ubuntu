@@ -7,7 +7,6 @@
 - link:
     ~/.antigenrc: root-files/antigenrc
     ~/.gitconfig: root-files/gitconfig
-    ~/.iterm2_shell_integration.zsh: root-files/iterm2_shell_integration.zsh
     ~/.config/nvim/init.vim: config/nvim/init.vim
     ~/.config/nvim/coc-settings.json: config/nvim/coc-settings.json
     ~/.p10k.zsh: root-files/p10k.zsh
