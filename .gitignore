@@ -1,0 +1,8 @@
+# OS/IDE Files
+.DS_Store
+
+# Local Configs
+*/**/*.local
+
+# Log Files
+**/*.log
