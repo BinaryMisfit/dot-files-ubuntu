@@ -6,7 +6,7 @@ export LIBGL_ALWAYS_INDIRECT=1
 export ITERM2_SQUELCH_MARK=1
 
 # Check for updates
-test -e ${HOME}/.dotfiles/deploy/update_online.sh && /bin/bash ${HOME}/.dotfiles/deploy/update_online.sh
+test -e ${HOME}/.dotfiles/update_online.sh && /bin/bash ${HOME}/.dotfiles/update_online.sh
 
 # Load Antigen
 printf "\r\033[0;92m[  ..  ]\033[0m Session startup"
