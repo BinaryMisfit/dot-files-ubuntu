@@ -1,0 +1,23 @@
+---
+- defaults:
+    link:
+      create: true
+      relink: true
+- clean: [ '~', '~/.config', '~/.config/nvim', '~/ssh' ]
+- link:
+    ~/.antigenrc: root-files/antigenrc
+    ~/.gitconfig: root-files/gitconfig
+    ~/.iterm2_shell_integration.zsh: root-files/iterm2_shell_integration.zsh
+    ~/.config/nvim/init.vim: config/nvim/init.vim
+    ~/.config/nvim/coc-settings.json: config/nvim/coc-settings.json
+    ~/.iterm2: iterm2
+    ~/.p10k.zsh: root-files/p10k.zsh
+    ~/.ssh/config: ssh/config
+    ~/.tmux.conf: root-files/tmux.conf
+    ~/.zshrc: root-files/zshrc
+    ~/.config/nvim/config.d:
+      path: config/nvim/config.d/*.vim
+      glob: true
+- shell:
+    - command: exec zsh
+      quiet: true
