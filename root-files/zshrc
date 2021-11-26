@@ -28,7 +28,7 @@ if [[ $(command -v sudoedit) != "" ]]; then
 fi
 
 if [[ $(command -v mk) != "" ]]; then
-  source <(microk8s kubectl completion zsh | sed "s/kubectl/mk/g")
+  source <(mk completion zsh | sed "s/kubectl/mk/g")
 fi
 
 # Update PATH
