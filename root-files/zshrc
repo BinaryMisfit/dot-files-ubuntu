@@ -27,8 +27,8 @@ if [[ $(command -v sudoedit) != "" ]]; then
   test -x $(which sudoedit) && alias svi="sudoedit "
 fi
 
-if [[ $(command -v microk8s) != "" ]]; then
-  test -x $(which microk8s) && alias kubectl="microk8s kubectl "
+if [[ $(command -v mk) != "" ]]; then
+  source <(microk8s kubectl completion zsh | sed "s/kubectl/mk/g")
 fi
 
 # Update PATH
