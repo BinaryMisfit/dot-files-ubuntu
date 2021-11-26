@@ -9,7 +9,6 @@ export LIBGL_ALWAYS_INDIRECT=1
 test -s ${HOME}/.dotfiles/update_online && /bin/bash ${HOME}/.dotfiles/update_online
 
 # Load Antigen
-printf "\r\033[0;92m[  ..  ]\033[0m Session startup"
 test -s /usr/share/zsh-antigen/antigen.zsh && source /usr/share/zsh-antigen/antigen.zsh
 test -s ${HOME}/.antigenrc && antigen init ${HOME}/.antigenrc
 test -s ${HOME}/.p10k.zsh && source ${HOME}/.p10k.zsh
@@ -38,4 +37,3 @@ export PATH
 
 # Run local config
 test -e ${HOME}/.zshrc.local && source ${HOME}/.zshrc.local
-printf "\r\033[0;92m[ DONE ]\033[0m Session startup\n"
