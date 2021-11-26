@@ -27,6 +27,10 @@ if [[ $(command -v sudoedit) != "" ]]; then
   test -x $(which sudoedit) && alias svi="sudoedit "
 fi
 
+if [[ $(command -v microk8s) != "" ]]; then
+  test -x $(which microk8s) && alias kubectl="microk8s kubectl "
+fi
+
 # Update PATH
 test -d /usr/local/sbin && PATH=/usr/local/sbin:$PATH
 test -d ${HOME}/.npm_packages && PATH=${HOME}/.npm_packages/bin:$PATH
