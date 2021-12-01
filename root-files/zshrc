@@ -13,12 +13,15 @@ test -s /usr/share/zsh-antigen/antigen.zsh && source /usr/share/zsh-antigen/anti
 test -s ${HOME}/.antigenrc && antigen init ${HOME}/.antigenrc
 test -s ${HOME}/.p10k.zsh && source ${HOME}/.p10k.zsh
 autoload -U compinit && compinit
-unsetopt BEEP
 
-# Additional variables
-if [[ $(command -v nvim) != "" ]]; then
-  test -x $(which nvim) && export EDITOR=$(which nvim)
-fi
+setopt AUTOCD
+setopt EXTENDED_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt INC_APPEND_HISTORY
+setopt NO_BEEP
+setopt SHARE_HISTORY
 
 test -d ${HOME}/.npm_packages && export NPM_CONFIG_PREFIX="${HOME}/.npm_packages"
 
@@ -38,6 +41,3 @@ test -d ${HOME}/.npm_packages && PATH=${HOME}/.npm_packages/bin:$PATH
 # Cleanup
 typeset -U PATH
 export PATH
-
-# Run local config
-test -e ${HOME}/.zshrc.local && source ${HOME}/.zshrc.local
