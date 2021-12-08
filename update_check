@@ -14,7 +14,7 @@ if [[ -d "${BASE_DIR}"/.git ]]; then
     OUTPUT=$(bash -c "${COMMAND}" 2>&1)
     EXIT_CODE=$?
     if [[ ${EXIT_CODE} -eq 0 ]]; then
-      COMMAND="\"${BASE_DIR}\"/install"
+      COMMAND="\"${BASE_DIR}\"/install.sh"
       OUTPUT=$(bash -c "${COMMAND}" 2>&1)
       EXIT_CODE=$?
       if [[ ${EXIT_CODE} -ne 0 ]]; then

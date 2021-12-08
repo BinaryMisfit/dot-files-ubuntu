@@ -1,18 +1,3 @@
-# Global exports
-export COLORTERM=truecolor
-export LANG=en_US.UTF-8
-export LANGUAGE=en_US.UTF-8
-export LC_CTYPE=en_US.UTF-8
-
-# Check for updates
-test -s $HOME/.dotfiles/update_online.sh && /bin/bash $HOME/.dotfiles/update_online.sh
-
-# Load Antigen
-test -s /usr/share/zsh-antigen/antigen.zsh && source /usr/share/zsh-antigen/antigen.zsh
-test -s $HOME/.antigenrc && antigen init $HOME/.antigenrc
-test -s $HOME/.p10k.zsh && source $HOME/.p10k.zsh
-autoload -U compinit && compinit
-
 setopt AUTOCD
 setopt EXTENDED_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
@@ -22,9 +7,25 @@ setopt INC_APPEND_HISTORY
 setopt NO_BEEP
 setopt SHARE_HISTORY
 
+export COLORTERM=truecolor
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
+
+test -d /usr/local/sbin && PATH=/usr/local/sbin:$PATH
+test -d $HOME/.npm_packages && PATH=$HOME/.npm_packages/bin:$PATH
+
+typeset -U PATH
+export PATH
+
+test -s $HOME/.dotfiles/update_online.sh && /bin/bash $HOME/.dotfiles/update_online.sh
+test -s /usr/share/zsh-antigen/antigen.zsh && source /usr/share/zsh-antigen/antigen.zsh
+test -s $HOME/.antigenrc && antigen init $HOME/.antigenrc
+test -s $HOME/.p10k.zsh && source $HOME/.p10k.zsh
+autoload -U compinit && compinit
+
 test -d $HOME/.npm_packages && export NPM_CONFIG_PREFIX="$HOME/.npm_packages"
 
-# Export aliases
 if [[ $(command -v sudoedit) != "" ]]; then
   test -x $(which sudoedit) && alias svi="sudoedit "
 fi
@@ -32,11 +33,3 @@ fi
 if [[ $(command -v mk) != "" ]]; then
   source <(mk completion zsh | sed "s/kubectl/mk/g")
 fi
-
-# Update PATH
-test -d /usr/local/sbin && PATH=/usr/local/sbin:$PATH
-test -d $HOME/.npm_packages && PATH=$HOME/.npm_packages/bin:$PATH
-
-# Cleanup
-typeset -U PATH
-export PATH

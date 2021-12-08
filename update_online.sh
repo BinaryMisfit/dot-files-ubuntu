@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-if [[ -n $TMUX ]]; then
+if [ -n "$TMUX" ]; then
   exit 0
 fi
 
-if [[ -n $TERMINAL_EMULATOR ]]; then
+if [ -n "$TERMINAL_EMULATOR" ]; then
   exit 0
 fi
 
