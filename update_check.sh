@@ -10,7 +10,7 @@ if [[ -d "$BASE_DIR"/.git ]]; then
   if [[ "$VERSION_CURRENT" != "$VERSION_NEW" ]]; then
     COMMAND="git -C $BASE_DIR pull --autostash --all --recurse-submodules --rebase --quiet"
     if bash -c "$COMMAND" 2>&1; then
-      COMMAND="$BASE_DIR/install.sh"
+      COMMAND="$BASE_DIR/install.sh" >/dev/null
       bash -c "$COMMAND" 2>&1
     fi
   fi
