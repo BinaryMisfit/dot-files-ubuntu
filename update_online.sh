@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
-printf "\033[0;92m[  ..  ]\033[0m Online update"
-if [[ -n ${TMUX+x} ]]; then
-  printf "\r\033[0;96m[ SKIP ]\033[0m Online update\n"
+if [[ -n $TMUX ]]; then
   exit 0
 fi
 
-if [[ -n ${TERMINAL_EMULATOR+x} ]]; then
-  printf "\r\033[0;96m[ SKIP ]\033[0m Online update\n"
+if [[ -n $TERMINAL_EMULATOR ]]; then
   exit 0
 fi
 

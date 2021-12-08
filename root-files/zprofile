@@ -1,0 +1,3 @@
+if [ -x $(which neofetch) ] && [ -f /etc/neofetch/config.conf ]; then
+    $(which neofetch) --config /etc/neofetch/config.conf
+fi
