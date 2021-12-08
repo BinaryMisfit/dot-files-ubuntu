@@ -18,5 +18,7 @@
       path: config/nvim/config.d/*.vim
       glob: true
 - shell:
+    - command: touch ~/.hushlogin
+      quiet: true
     - command: exec zsh
       quiet: true
