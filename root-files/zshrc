@@ -6,7 +6,7 @@ export LC_CTYPE=en_US.UTF-8
 export LIBGL_ALWAYS_INDIRECT=1
 
 # Check for updates
-test -s ${HOME}/.dotfiles/update_online && /bin/bash ${HOME}/.dotfiles/update_online
+test -s ${HOME}/.dotfiles/update_online.sh && /bin/bash ${HOME}/.dotfiles/update_online.sh
 
 # Load Antigen
 test -s /usr/share/zsh-antigen/antigen.zsh && source /usr/share/zsh-antigen/antigen.zsh
