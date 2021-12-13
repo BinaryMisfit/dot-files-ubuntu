@@ -81,12 +81,12 @@ if [ "$SHELL" != "$(which zsh)" ]; then
   sudo chsh -z "$(which zsh)" "$USER"
 fi
 
-if [ "$(which nvim)" !=  "$(update-alternatives --get-selections | grep 'editor' | awk '{ print $3 }')" ]; then
+if [ "$(which nvim)" !=  "$(update-alternatives --get-selections | grep 'editor' | head -1 | awk '{ print $3 }')" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Setting default editor to neovim\n' -1
   sudo update-alternatives --install /usr/bin/editor editor "$(which nvim)" 100 >/dev/null
 fi
 
-if [ "$(which nvim)" !=  "$(update-alternatives --get-selections | grep 'vi' | awk '{ print $3 }')" ]; then
+if [ "$(which nvim)" !=  "$(update-alternatives --get-selections | grep 'vi' | head -1 | awk '{ print $3 }')" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Setting default vi to neovim\n' -1
   sudo update-alternatives --install /usr/bin/vi vi "$(which nvim)" 100 >/dev/null
 fi
