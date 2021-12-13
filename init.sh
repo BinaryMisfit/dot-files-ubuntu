@@ -16,7 +16,9 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq --no-install-recommends insta
   neovim \
   python3 \
   python3-pip \
-  tmux
+  tmux \
+  zsh \
+  zsh-antigen
 
 printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing node packages\n' -1
 mkdir -p .npm_packages
