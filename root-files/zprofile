@@ -1,5 +1,12 @@
 if which neofetch >/dev/null; then
     if [ ! -n "$TMUX" ] && [ -f $HOME/.neofetch.conf ]; then
-        $(which neofetch) --config $HOME/.neofetch.conf
+        $(which neofetch) \
+            --battery_display 'barinfo' \
+            --cpu_display 'barinfo' \
+            --disk_show '/' \
+            --disk_percent 'on' \
+            --disk_display 'barinfo' \
+            --memory_display 'barinfo' \
+            --refresh_rate 'on'
     fi
 fi
