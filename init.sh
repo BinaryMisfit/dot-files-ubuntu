@@ -62,6 +62,13 @@ if ! pip show pynvim >/dev/null; then
   pip install --upgrade pynvim
 fi
 
+CUR_LOCALE=$(cat /etc/default/locale)
+if [ "$CUR_LOCALE" != "LANG=en_US.UTF-8" ]; then
+  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Setting Locale\n' -1
+  sudo locale-gen --purge en_US.UTF-8 >/dev/null
+  sudo update-locale LANG=en_US.UTF-8
+fi
+
 TIMEZONE=$(cat /etc/timezone)
 if [ "$TIMEZONE" != "Africa/Johannesburg" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Setting Timezone\n' -1
