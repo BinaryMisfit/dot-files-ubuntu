@@ -1,5 +1,5 @@
 if which neofetch >/dev/null; then
-    if [ ! -n "$TMUX" ] && [ -f $HOME/.neofetch.conf ]; then
+    if [ ! -n "$TMUX" ] && [ -f "$HOME/.config/neofetch/config.conf" ]; then
         $(which neofetch)
     fi
 fi
