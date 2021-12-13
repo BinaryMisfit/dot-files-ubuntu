@@ -13,12 +13,6 @@ if [ "$CUR_LOCALE" != "LANG=en_US.UTF-8" ]; then
   sudo update-locale LANG=en_US.UTF-8
 fi
 
-if [ -f "/etc/sudoers.d/90-$USER-nopasswd" ]; then
-    printf "FOUND: /etc/sudoers.d/90-%s-nopasswd\n" "$USER"
-else
-    printf "NOT FOUND: /etc/sudoers.d/90-%s-nopasswd\n" "$USER"
-fi
-
 if [ ! -f "/etc/sudoers.d/90-$USER-nopasswd" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Updating sudo for %s\n' -1 "$USER"
   echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/90-$USER-nopasswd" >/dev/null
