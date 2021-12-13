@@ -24,7 +24,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -qq update
 printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Upgrading Ubuntu\n' -1
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq upgrade
 
-PACKAGES=("build-essential" "coreutils" "nodejs" "jq" "neofetch")
+PACKAGES=("build-essential" "coreutils" "indicator-cpufreq" "jq" "nodejs" "neofetch")
 PACKAGES+=("python3" "python3-pip" "tmux" "zsh" "zsh-antigen")
 INSTALL=()
 for PACKAGE in "${PACKAGES[@]}"; do
