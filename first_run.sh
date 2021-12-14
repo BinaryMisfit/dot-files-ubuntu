@@ -13,30 +13,40 @@ if [ "$CUR_LOCALE" != "LANG=en_US.UTF-8" ]; then
   sudo update-locale LANG=en_US.UTF-8
 fi
 
-if [ ! -f "/etc/sudoers.d/90-$USER-nopasswd" ]; then
+if sudo test ! -f "/etc/sudoers.d/90-$USER-nopasswd"; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Updating sudo for %s\n' -1 "$USER"
   echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/90-$USER-nopasswd" >/dev/null
 fi
 
-if [ ! -f "/etc/apt/sources.list.d/git-core-ubuntu-ppa-$(lsb_release -c -s).list" ]; then
+if sudo test ! -f "/etc/apt/sources.list.d/git-core-ubuntu-ppa-$(lsb_release -c -s).list"; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing GIT repository\n' -1
   sudo add-apt-repository -nsy ppa:git-core/ppa
+  UPDATE=true
 fi
 
 if [ ! -f "/etc/apt/sources.list.d/neovim-ppa-ubuntu-stable-$(lsb_release -c -s).list" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing Neovim repository\n' -1
   sudo add-apt-repository -nsy ppa:neovim-ppa/stable
+  UPDATE=true
 fi
 
 if [ ! -f "/etc/apt/sources.list.d/nodesource.list" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing NodeJS repository\n' -1
   curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
+  UPDATE=true
 fi
 
-printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Updating repositories\n' -1
-sudo DEBIAN_FRONTEND=noninteractive apt-get -qq update
-printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Upgrading packages\n' -1
-sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq upgrade
+IFS=';' read UPDATES SECURITY_UPDATES < <(sudo /usr/lib/update-notifier/apt-check 2>&1)
+if (( $UPDATES > 0 )) || (( $SECURITY_UPDATES > 0 )); then
+  UPDATE=true
+fi
+
+if [ "$UPDATE" == "true" ]; then
+  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Updating repositories\n' -1
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -qq update
+  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Upgrading packages\n' -1
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq upgrade
+fi
 
 PACKAGES=("build-essential" "coreutils" "curl" "i2c-tools" "imagemagick")
 PACKAGES+=("indicator-cpufreq" "jq" "lm-sensors" "nodejs" "neofetch")
@@ -54,7 +64,7 @@ if [ ${#INSTALL[@]} -gt 0 ]; then
 fi
 
 if [ ! -d "$HOME/.npm_packages/" ]; then
-  mkdir -p .npm_packages
+  mkdir -p "$HOME/.npm_packages"
 fi
 
 if [ "$(npm config get prefix)" != "$HOME/.npm_packages/" ]; then
@@ -101,18 +111,19 @@ done
 
 if [ ${#REMOVE[@]} -gt 0 ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing unneeded packages\n' -1
-  printf "%s" "${REMOVE[@]}"
   sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq remove --purge "${REMOVE[@]}"
 fi
 
-printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing outdated packages\n' -1
-sudo DEBIAN_FRONTEND=noninteractive apt-get -qq -y autoremove
-printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Cleaning packages\n' -1
-sudo DEBIAN_FRONTEND=noninteractive apt-get -qq autoclean
+if [ "$UPDATE" == "true" ]; then
+  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Cleaning package dependencies\n' -1
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -qq -y autoremove
+  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Cleaning outdated packages\n' -1
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -qq autoclean
+fi
 
 if [ "$USER" != "binarymisfit" ]; then
   if ! id binarymisfit &>/dev/null; then
-    printf "[%(%a %b %e %H:%M:%S %Z %Y)T] User binarymisfit does not exists. Create [Y/n] " -1
+    printf "[%(%a %b %e %H:%M:%S %Z %Y)T] User binarymisfit does not exists. Create? [Y/n] " -1
     read CREATE
     CREATE=${CREATE:-Y}
     if [ "$CREATE" == "Y" ] || [ "$CREATE" == "y" ]; then
@@ -144,8 +155,23 @@ if [ "$USER" != "binarymisfit" ]; then
     sudo chown -R binarymisfit:binarymisfit /home/binarymisfit
   fi
 
-  if sudo test -f "/home/binarymisfit/.dotfiles/install.sh"; then
+  if sudo test -f "/home/binarymisfit/.dotfiles/install.sh" && sudo test ! -f "/home/binarymisfit/.antigenrc"; then
     printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing dot files\n' -1
-    sudo -u binarymisfit "/home/binarymisfit/.dotfiles/install.sh"
+    sudo -u binarymisfit -- bash -c 'cd $HOME; /home/binarymisfit/.dotfiles/install.sh >/dev/null'
+  fi
+
+  if [ ! -f "/etc/sudoers.d/90-binarymisfit-nopasswd" ]; then
+    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Updating sudo for binarymisfit\n' -1
+    echo "binarymisfit ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/90-binarymisfit-nopasswd" >/dev/null
+  fi
+fi
+
+if sudo test -f /var/run/reboot-required; then
+  printf "[%(%a %b %e %H:%M:%S %Z %Y)T] System reboot required. Reboot now? [Y/n] " -1
+  read REBOOT
+  REBOOT=${REBOOT:-Y}
+  if [ "$REBOOT" == "Y" ] || [ "$REBOOT" == "y" ]; then
+    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Rebooting machine\n' -1
+    sudo reboot
   fi
 fi
