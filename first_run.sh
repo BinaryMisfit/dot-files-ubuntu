@@ -49,7 +49,7 @@ if [ "$UPDATE" == "true" ]; then
 fi
 
 PACKAGES=("build-essential" "coreutils" "curl" "i2c-tools" "imagemagick")
-PACKAGES+=("indicator-cpufreq" "jq" "lm-sensors" "nodejs" "neofetch" "nvim")
+PACKAGES+=("indicator-cpufreq" "jq" "lm-sensors" "nodejs" "neofetch" "neovim")
 PACKAGES+=("python3" "python3-pip" "socat" "tmux" "zsh" "zsh-antigen")
 INSTALL=()
 for PACKAGE in "${PACKAGES[@]}"; do
@@ -69,6 +69,11 @@ fi
 
 if [ "$(npm config get prefix)" != "$HOME/.npm_packages/" ]; then
   npm config set prefix "$HOME/.npm_packages"
+fi
+
+if [ ! -d "$HOME/.npm_packages/lib" ]; then
+  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing node packages\n' -1
+  npm -g install neovim@latest
 fi
 
 if npm -g --list -p | grep -q "neovim"; then
