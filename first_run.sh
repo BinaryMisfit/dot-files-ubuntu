@@ -61,6 +61,7 @@ done
 if [ ${#INSTALL[@]} -gt 0 ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing additional packages\n' -1
   sudo DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install "${INSTALL[@]}"
+  UPDATE=true
 fi
 
 if [ ! -d "$HOME/.npm_packages/" ]; then
@@ -94,6 +95,7 @@ fi
 if [ "$SHELL" != "$(which zsh)" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Settings default shell to zsh\n' -1
   sudo chsh -s "$(which zsh)" "$USER"
+  RELOAD=true
 fi
 
 if [ "$(which nvim)" !=  "$(update-alternatives --get-selections | grep 'editor' | head -1 | awk '{ print $3 }')" ]; then
@@ -117,6 +119,7 @@ done
 if [ ${#REMOVE[@]} -gt 0 ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing unneeded packages\n' -1
   sudo DEBIAN_FRONTEND=noninteractive apt-get -y remove --purge "${REMOVE[@]}"
+  UPDATE=true
 fi
 
 if [ "$UPDATE" == "true" ]; then
@@ -134,6 +137,7 @@ if [ "$USER" != "binarymisfit" ]; then
     if [ "$CREATE" == "Y" ] || [ "$CREATE" == "y" ]; then
       printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Creating user binarymisfit\n' -1
       sudo useradd -c "Willie Roberts" -m -G sudo -s /usr/bin/zsh binarymisfit
+      RELOAD=true
     fi
   fi
 
@@ -171,7 +175,7 @@ if [ "$USER" != "binarymisfit" ]; then
   fi
 fi
 
-if sudo test -f /var/run/reboot-required; then
+if sudo test -f /var/run/reboot-required || [ "$RELOAD" == "true" ]; then
   printf "[%(%a %b %e %H:%M:%S %Z %Y)T] System reboot required. Reboot now? [Y/n] " -1
   read REBOOT
   REBOOT=${REBOOT:-Y}
