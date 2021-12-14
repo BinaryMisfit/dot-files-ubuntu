@@ -49,7 +49,7 @@ if [ "$UPDATE" == "true" ]; then
 fi
 
 PACKAGES=("build-essential" "coreutils" "curl" "i2c-tools" "imagemagick")
-PACKAGES+=("indicator-cpufreq" "jq" "lm-sensors" "nodejs" "neofetch")
+PACKAGES+=("indicator-cpufreq" "jq" "lm-sensors" "nodejs" "neofetch" "nvim")
 PACKAGES+=("python3" "python3-pip" "socat" "tmux" "zsh" "zsh-antigen")
 INSTALL=()
 for PACKAGE in "${PACKAGES[@]}"; do
