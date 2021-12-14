@@ -43,9 +43,9 @@ fi
 
 if [ "$UPDATE" == "true" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Updating repositories\n' -1
-  sudo DEBIAN_FRONTEND=noninteractive apt-get -qq update
+  sudo DEBIAN_FRONTEND=noninteractive apt-get update
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Upgrading packages\n' -1
-  sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq upgrade
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 fi
 
 PACKAGES=("build-essential" "coreutils" "curl" "i2c-tools" "imagemagick")
@@ -60,7 +60,7 @@ done
 
 if [ ${#INSTALL[@]} -gt 0 ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing additional packages\n' -1
-  sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq --no-install-recommends install "${INSTALL[@]}"
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install "${INSTALL[@]}"
 fi
 
 if [ ! -d "$HOME/.npm_packages/" ]; then
@@ -93,12 +93,12 @@ fi
 
 if [ "$(which nvim)" !=  "$(update-alternatives --get-selections | grep 'editor' | head -1 | awk '{ print $3 }')" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Setting default editor to neovim\n' -1
-  sudo update-alternatives --install /usr/bin/editor editor "$(which nvim)" 100 >/dev/null
+  sudo update-alternatives --install /usr/bin/editor editor "$(which nvim)" 100
 fi
 
 if [ "$(which nvim)" !=  "$(update-alternatives --get-selections | grep 'vi' | head -1 | awk '{ print $3 }')" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Setting default vi to neovim\n' -1
-  sudo update-alternatives --install /usr/bin/vi vi "$(which nvim)" 100 >/dev/null
+  sudo update-alternatives --install /usr/bin/vi vi "$(which nvim)" 100
 fi
 
 OUTDATED=("vim" "vim-tiny")
@@ -111,14 +111,14 @@ done
 
 if [ ${#REMOVE[@]} -gt 0 ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing unneeded packages\n' -1
-  sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq remove --purge "${REMOVE[@]}"
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y remove --purge "${REMOVE[@]}"
 fi
 
 if [ "$UPDATE" == "true" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Cleaning package dependencies\n' -1
-  sudo DEBIAN_FRONTEND=noninteractive apt-get -qq -y autoremove
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y autoremove
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Cleaning outdated packages\n' -1
-  sudo DEBIAN_FRONTEND=noninteractive apt-get -qq autoclean
+  sudo DEBIAN_FRONTEND=noninteractive apt-get autoclean
 fi
 
 if [ "$USER" != "binarymisfit" ]; then
@@ -151,13 +151,13 @@ if [ "$USER" != "binarymisfit" ]; then
 
   if sudo test ! -d "/home/binarymisfit/.dotfiles"; then
     printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Retrieving dot files\n' -1
-    sudo git clone --recurse-submodules https://github.com/BinaryMisfit/dot-files-ubuntu /home/binarymisfit/.dotfiles -qq
+    sudo git clone --recurse-submodules https://github.com/BinaryMisfit/dot-files-ubuntu /home/binarymisfit/.dotfiles
     sudo chown -R binarymisfit:binarymisfit /home/binarymisfit
   fi
 
   if sudo test -f "/home/binarymisfit/.dotfiles/install.sh" && sudo test ! -f "/home/binarymisfit/.antigenrc"; then
     printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing dot files\n' -1
-    sudo -u binarymisfit -- bash -c 'cd $HOME; /home/binarymisfit/.dotfiles/install.sh >/dev/null'
+    sudo -u binarymisfit -- bash -c 'cd $HOME; /home/binarymisfit/.dotfiles/install.sh'
   fi
 
   if [ ! -f "/etc/sudoers.d/90-binarymisfit-nopasswd" ]; then

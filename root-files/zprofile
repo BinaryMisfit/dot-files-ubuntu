@@ -3,3 +3,11 @@ if which neofetch >/dev/null; then
         $(which neofetch)
     fi
 fi
+
+if groups | grep 'sudo' >/dev/null; then
+    IFS=';' read UPDATES SECURITY_UPDATES < <(sudo /usr/lib/update-notifier/apt-check 2>&1)
+    INSTALL=$((UPDATES + SECURITY_UPDATES))
+    if (( $INSTALL > 0 )); then
+        printf "%d update(s) available\n" "$INSTALL"
+    fi
+fi
