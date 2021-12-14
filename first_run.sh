@@ -109,3 +109,43 @@ printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing outdated packages\n' -1
 sudo DEBIAN_FRONTEND=noninteractive apt-get -qq -y autoremove
 printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Cleaning packages\n' -1
 sudo DEBIAN_FRONTEND=noninteractive apt-get -qq autoclean
+
+if [ "$USER" != "binarymisfit" ]; then
+  if ! id binarymisfit &>/dev/null; then
+    printf "[%(%a %b %e %H:%M:%S %Z %Y)T] User binarymisfit does not exists. Create [Y/n] " -1
+    read CREATE
+    CREATE=${CREATE:-Y}
+    if [ "$CREATE" == "Y" ] || [ "$CREATE" == "y" ]; then
+      printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Creating user binarymisfit\n' -1
+      sudo useradd -c "Willie Roberts" -m -G sudo -s /usr/bin/zsh binarymisfit
+    fi
+  fi
+
+  if sudo test -d "/home/binarymisfit"; then
+    if sudo test -f "/home/binarymisfit/.bashrc"; then
+      printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .bashrc\n' -1
+      sudo rm /home/binarymisfit/.bashrc
+    fi
+
+    if sudo test -f "/home/binarymisfit/.bash_logout"; then
+      printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .bash_logout\n' -1
+      sudo rm /home/binarymisfit/.bash_logout
+    fi
+
+    if sudo test -f "/home/binarymisfit/.profile"; then
+      printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .profile\n' -1
+      sudo rm /home/binarymisfit/.profile
+    fi
+  fi
+
+  if sudo test ! -d "/home/binarymisfit/.dotfiles"; then
+    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Retrieving dot files\n' -1
+    sudo git clone --recurse-submodules https://github.com/BinaryMisfit/dot-files-ubuntu /home/binarymisfit/.dotfiles -qq
+    sudo chown -R binarymisfit:binarymisfit /home/binarymisfit
+  fi
+
+  if sudo test -f "/home/binarymisfit/.dotfiles/install.sh"; then
+    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing dot files\n' -1
+    sudo -u binarymisfit "/home/binarymisfit/.dotfiles/install.sh"
+  fi
+fi
