@@ -88,7 +88,7 @@ fi
 
 if [ "$SHELL" != "$(which zsh)" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Settings default shell to zsh\n' -1
-  sudo chsh -z "$(which zsh)" "$USER"
+  sudo chsh -s "$(which zsh)" "$USER"
 fi
 
 if [ "$(which nvim)" !=  "$(update-alternatives --get-selections | grep 'editor' | head -1 | awk '{ print $3 }')" ]; then
