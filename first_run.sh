@@ -175,6 +175,39 @@ if sudo test ! -f "/etc/sudoers.d/90-binarymisfit-nopasswd"; then
   echo "binarymisfit ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/90-binarymisfit-nopasswd" >/dev/null
 fi
 
+if sudo test -d "/root"; then
+  if sudo test -f "/root/.bashrc"; then
+    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .bashrc\n' -1
+    sudo rm /root/.bashrc
+  fi
+
+  if sudo test -f "/root/.bash_logout"; then
+    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .bash_logout\n' -1
+    sudo rm /root/.bash_logout
+  fi
+
+  if sudo test -f "/root/.profile"; then
+    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .profile\n' -1
+    sudo rm /root/.profile
+  fi
+fi
+
+if sudo test ! -d "/root/.dotfiles"; then
+  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Retrieving dot files\n' -1
+  sudo git clone --recurse-submodules https://github.com/BinaryMisfit/dot-files-ubuntu /root/.dotfiles
+  sudo chown -R root:root /root
+fi
+
+if sudo test -f "/root/.dotfiles/install.sh" && sudo test ! -f "/root/.antigenrc"; then
+  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing dot files\n' -1
+  sudo -u root -- bash -c 'cd $HOME; /root/.dotfiles/install.sh'
+fi
+
+if sudo test ! -f "/etc/sudoers.d/90-root-nopasswd"; then
+  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Updating sudo for root\n' -1
+  echo "root ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/90-root-nopasswd" >/dev/null
+fi
+
 if sudo test -f /var/run/reboot-required || [ "$RELOAD" == "true" ]; then
   printf "[%(%a %b %e %H:%M:%S %Z %Y)T] System reboot required. Reboot now? [Y/n] " -1
   read REBOOT
