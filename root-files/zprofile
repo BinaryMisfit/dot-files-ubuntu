@@ -11,3 +11,7 @@ if groups | grep 'sudo' >/dev/null; then
         printf "%d update(s) available\n" "$INSTALL"
     fi
 fi
+
+if [ "$USER" == "root" ]; then
+    cd "$HOME"
+fi
