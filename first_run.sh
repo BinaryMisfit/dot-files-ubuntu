@@ -170,7 +170,7 @@ if sudo test -f "/home/binarymisfit/.dotfiles/install.sh" && sudo test ! -f "/ho
   sudo -u binarymisfit -- bash -c 'cd $HOME; /home/binarymisfit/.dotfiles/install.sh'
 fi
 
-if [ ! -f "/etc/sudoers.d/90-binarymisfit-nopasswd" ]; then
+if sudo test ! -f "/etc/sudoers.d/90-binarymisfit-nopasswd"; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Updating sudo for binarymisfit\n' -1
   echo "binarymisfit ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/90-binarymisfit-nopasswd" >/dev/null
 fi
