@@ -22,21 +22,21 @@ if sudo test ! -f "/etc/apt/sources.list.d/git-core-ubuntu-ppa-$(lsb_release -c 
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing GIT repository\n' -1
   sudo add-apt-repository -nsy ppa:git-core/ppa
   UPDATE=true
-  sleep 10s
+  sleep 5s
 fi
 
 if [ ! -f "/etc/apt/sources.list.d/neovim-ppa-ubuntu-stable-$(lsb_release -c -s).list" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing Neovim repository\n' -1
   sudo add-apt-repository -nsy ppa:neovim-ppa/stable
   UPDATE=true
-  sleep 10s
+  sleep 5s
 fi
 
 if [ ! -f "/etc/apt/sources.list.d/nodesource.list" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing NodeJS repository\n' -1
   curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
   UPDATE=true
-  sleep 10s
+  sleep 5s
 fi
 
 IFS=';' read -r UPDATES SECURITY_UPDATES < <(sudo /usr/lib/update-notifier/apt-check 2>&1)
@@ -49,6 +49,8 @@ if [ "$UPDATE" == "true" ]; then
   sudo DEBIAN_FRONTEND=noninteractive apt-get update
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Upgrading packages\n' -1
   sudo DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Upgrading distribution\n' -1
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
 fi
 
 PACKAGES=("build-essential" "coreutils" "curl" "i2c-tools" "imagemagick")
