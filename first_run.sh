@@ -22,22 +22,25 @@ if sudo test ! -f "/etc/apt/sources.list.d/git-core-ubuntu-ppa-$(lsb_release -c 
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing GIT repository\n' -1
   sudo add-apt-repository -nsy ppa:git-core/ppa
   UPDATE=true
+  sleep 10s
 fi
 
 if [ ! -f "/etc/apt/sources.list.d/neovim-ppa-ubuntu-stable-$(lsb_release -c -s).list" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing Neovim repository\n' -1
   sudo add-apt-repository -nsy ppa:neovim-ppa/stable
   UPDATE=true
+  sleep 10s
 fi
 
 if [ ! -f "/etc/apt/sources.list.d/nodesource.list" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Installing NodeJS repository\n' -1
   curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
   UPDATE=true
+  sleep 10s
 fi
 
-IFS=';' read UPDATES SECURITY_UPDATES < <(sudo /usr/lib/update-notifier/apt-check 2>&1)
-if (( $UPDATES > 0 )) || (( $SECURITY_UPDATES > 0 )); then
+IFS=';' read -r UPDATES SECURITY_UPDATES < <(sudo /usr/lib/update-notifier/apt-check 2>&1)
+if ((UPDATES > 0)) || ((SECURITY_UPDATES > 0)); then
   UPDATE=true
 fi
 
@@ -98,12 +101,12 @@ if [ "$SHELL" != "$(which zsh)" ]; then
   RELOAD=true
 fi
 
-if [ "$(which nvim)" !=  "$(update-alternatives --get-selections | grep 'editor' | head -1 | awk '{ print $3 }')" ]; then
+if [ "$(which nvim)" != "$(update-alternatives --get-selections | grep 'editor' | head -1 | awk '{ print $3 }')" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Setting default editor to neovim\n' -1
   sudo update-alternatives --install /usr/bin/editor editor "$(which nvim)" 100
 fi
 
-if [ "$(which nvim)" !=  "$(update-alternatives --get-selections | grep 'vi' | head -1 | awk '{ print $3 }')" ]; then
+if [ "$(which nvim)" != "$(update-alternatives --get-selections | grep 'vi' | head -1 | awk '{ print $3 }')" ]; then
   printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Setting default vi to neovim\n' -1
   sudo update-alternatives --install /usr/bin/vi vi "$(which nvim)" 100
 fi
@@ -132,7 +135,7 @@ fi
 if [ "$USER" != "binarymisfit" ]; then
   if ! id binarymisfit &>/dev/null; then
     printf "[%(%a %b %e %H:%M:%S %Z %Y)T] User binarymisfit does not exists. Create? [Y/n] " -1
-    read CREATE
+    read -r CREATE
     CREATE=${CREATE:-Y}
     if [ "$CREATE" == "Y" ] || [ "$CREATE" == "y" ]; then
       printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Creating user binarymisfit\n' -1
@@ -142,32 +145,34 @@ if [ "$USER" != "binarymisfit" ]; then
   fi
 fi
 
-if sudo test -d "/home/binarymisfit"; then
-  if sudo test -f "/home/binarymisfit/.bashrc"; then
-    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .bashrc\n' -1
-    sudo rm /home/binarymisfit/.bashrc
+if [ "$CREATE" == "Y" ] || [ "$CREATE" == "y" ]; then
+  if sudo test -d "/home/binarymisfit"; then
+    if sudo test -f "/home/binarymisfit/.bashrc"; then
+      printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .bashrc\n' -1
+      sudo rm /home/binarymisfit/.bashrc
+    fi
+
+    if sudo test -f "/home/binarymisfit/.bash_logout"; then
+      printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .bash_logout\n' -1
+      sudo rm /home/binarymisfit/.bash_logout
+    fi
+
+    if sudo test -f "/home/binarymisfit/.profile"; then
+      printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .profile\n' -1
+      sudo rm /home/binarymisfit/.profile
+    fi
   fi
 
-  if sudo test -f "/home/binarymisfit/.bash_logout"; then
-    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .bash_logout\n' -1
-    sudo rm /home/binarymisfit/.bash_logout
+  if sudo test ! -d "/home/binarymisfit/.dotfiles"; then
+    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Retrieving dot files\n' -1
+    sudo git clone --recurse-submodules https://github.com/BinaryMisfit/dot-files-ubuntu /home/binarymisfit/.dotfiles
+    sudo chown -R binarymisfit:binarymisfit /home/binarymisfit
   fi
 
-  if sudo test -f "/home/binarymisfit/.profile"; then
-    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Removing .profile\n' -1
-    sudo rm /home/binarymisfit/.profile
+  if sudo test ! -f "/etc/sudoers.d/90-binarymisfit-nopasswd"; then
+    printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Updating sudo for binarymisfit\n' -1
+    echo "binarymisfit ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/90-binarymisfit-nopasswd" >/dev/null
   fi
-fi
-
-if sudo test ! -d "/home/binarymisfit/.dotfiles"; then
-  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Retrieving dot files\n' -1
-  sudo git clone --recurse-submodules https://github.com/BinaryMisfit/dot-files-ubuntu /home/binarymisfit/.dotfiles
-  sudo chown -R binarymisfit:binarymisfit /home/binarymisfit
-fi
-
-if sudo test ! -f "/etc/sudoers.d/90-binarymisfit-nopasswd"; then
-  printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Updating sudo for binarymisfit\n' -1
-  echo "binarymisfit ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/90-binarymisfit-nopasswd" >/dev/null
 fi
 
 if sudo test -d "/root"; then
@@ -200,7 +205,7 @@ fi
 
 if sudo test -f /var/run/reboot-required || [ "$RELOAD" == "true" ]; then
   printf "[%(%a %b %e %H:%M:%S %Z %Y)T] System reboot required. Reboot now? [Y/n] " -1
-  read REBOOT
+  read -r REBOOT
   REBOOT=${REBOOT:-Y}
   if [ "$REBOOT" == "Y" ] || [ "$REBOOT" == "y" ]; then
     printf '[%(%a %b %e %H:%M:%S %Z %Y)T] Rebooting machine\n' -1
