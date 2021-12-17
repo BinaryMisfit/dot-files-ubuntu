@@ -113,7 +113,7 @@ if [ "$(which nvim)" != "$(update-alternatives --get-selections | grep 'vi' | he
   sudo update-alternatives --install /usr/bin/vi vi "$(which nvim)" 100
 fi
 
-OUTDATED=("vim" "vim-tiny")
+OUTDATED=("snapd" "vim" "vim-tiny")
 REMOVE=()
 for PACKAGE in "${OUTDATED[@]}"; do
   if ! DEBIAN_FRONTEND=noninteractive apt-cache policy "$PACKAGE" | grep -q 'Installed: (none)'; then
