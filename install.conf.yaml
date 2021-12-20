@@ -6,6 +6,7 @@
 - clean: [ '~', '~/.config', '~/.config/nvim', '~/ssh' ]
 - link:
     ~/.antigenrc: root-files/antigenrc
+    ~/.dircolors: root-files/dircolors
     ~/.gitconfig: root-files/gitconfig
     ~/.config/nvim/init.vim: config/nvim/init.vim
     ~/.config/nvim/coc-settings.json: config/nvim/coc-settings.json
