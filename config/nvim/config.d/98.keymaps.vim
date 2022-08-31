@@ -51,7 +51,7 @@ nnoremap <silent> K :call <SID>show_doc()<CR>
 
 imap <expr><c-space> coc#refresh()
 " Prevent <ENTER> moving to newline
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-y>"
 " Use <Ctrl> <l> to trigger snippets
 imap <C-l> <Plug>(coc-snippets-expand)
 " Use <Ctrl> <j> to select text for visual text of snippet.
