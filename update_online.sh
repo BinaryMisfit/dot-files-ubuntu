@@ -8,5 +8,5 @@ if [ -n "$TERMINAL_EMULATOR" ]; then
 fi
 
 if ping -q -c1 github.com &>/dev/null; then
-  /bin/bash -c "$(curl -fsSL https://raw.github.com/BinaryMisfit/dot-files-ubuntu/active/update_check.sh)"
+  /bin/bash -c "$(curl --connect-timeout 5 -fsSL https://raw.github.com/BinaryMisfit/dot-files-ubuntu/active/update_check.sh) &>/dev/null"
 fi
